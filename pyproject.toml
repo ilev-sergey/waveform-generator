@@ -1,0 +1,14 @@
+[project]
+name = "waveform-generator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=2.2.3",
+]
+
+[project.optional-dependencies]
+tests = [
+    "pytest>=8.3.5",
+]
