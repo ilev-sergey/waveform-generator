@@ -63,4 +63,47 @@ class RectangularPulse(Pulse):
 
 
 class TrapezoidalPulse(Pulse):
-    pass
+    def __init__(
+        self, amplitude, duration, delay=0.0, dc_bias=0, rise_time=0.0, fall_time=0.0
+    ):
+        super().__init__(amplitude, duration, delay, dc_bias)
+        self.rise_time = rise_time
+        self.fall_time = fall_time
+
+    def to_array(self):
+        sample_rate = 1000  # points/s
+
+        total_time = self.delay + self.rise_time + self.duration + self.fall_time
+
+        # Create time array
+        num_points = int(total_time * sample_rate) + 1
+        time_array = np.linspace(0, total_time, num_points)
+
+        # Initialize voltage array with DC bias
+        voltage_array = np.ones_like(time_array) * self.dc_bias
+
+        pulse_start_rise_idx = int(self.delay * sample_rate)
+        pulse_end_rise_idx = int((self.delay + self.rise_time) * sample_rate)
+        pulse_start_fall_idx = int(
+            (self.delay + self.rise_time + self.duration) * sample_rate
+        )
+        pulse_end_fall_idx = int(
+            (self.delay + self.rise_time + self.duration + self.fall_time) * sample_rate
+        )
+        pulse_end_fall_idx = min(pulse_end_fall_idx, len(voltage_array) - 1)
+
+        voltage_array[pulse_start_rise_idx : pulse_end_rise_idx + 1] = np.linspace(
+            self.dc_bias,
+            self.dc_bias + self.amplitude,
+            pulse_end_rise_idx - pulse_start_rise_idx + 1,
+        )
+        voltage_array[pulse_end_rise_idx : pulse_start_fall_idx + 1] = (
+            self.dc_bias + self.amplitude
+        )
+        voltage_array[pulse_start_fall_idx : pulse_end_fall_idx + 1] = np.linspace(
+            self.dc_bias + self.amplitude,
+            self.dc_bias,
+            pulse_end_fall_idx - pulse_start_fall_idx + 1,
+        )
+
+        return (time_array, voltage_array)
