@@ -5,10 +5,16 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "matplotlib>=3.10.1",
     "numpy>=2.2.3",
 ]
 
 [project.optional-dependencies]
 tests = [
     "pytest>=8.3.5",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
 ]

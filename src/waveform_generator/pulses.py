@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import numpy as np
+from matplotlib import pyplot as plt
 
 
 @dataclass
@@ -10,7 +11,12 @@ class Waveform:
     delay: float = 0.0
 
     def plot(self):
-        pass
+        times, voltages = self.to_array()
+        plt.plot(times, voltages)
+        plt.title("Waveform Plot")
+        plt.xlabel("Time, s")
+        plt.ylabel("Voltage, V")
+        plt.show()
 
     def to_array(self):
         pass
