@@ -3,10 +3,10 @@ name = "waveform-generator"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.8"
 dependencies = [
-    "matplotlib>=3.10.1",
-    "numpy>=2.2.3",
+    "matplotlib",
+    "numpy",
 ]
 
 [project.optional-dependencies]
