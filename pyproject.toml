@@ -11,13 +11,28 @@ dependencies = [
 
 [project.optional-dependencies]
 tests = [
+    "coverage>=7.6.1",
     "pytest>=8.3.5",
 ]
 
 [dependency-groups]
 dev = [
+    "coverage>=7.6.1",
     "ipykernel>=6.29.5",
 ]
 
 [tool.ruff]
 line-length = 120
+
+[tool.coverage.run]
+source = [
+    "waveform_generator",
+]
+parallel = true
+
+[tool.coverage.paths]
+source = [
+    "src",
+    # blank line to avoid reordering 
+    "*/site-packages",
+]
