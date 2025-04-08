@@ -3,6 +3,8 @@ from dataclasses import dataclass
 import numpy as np
 from matplotlib import pyplot as plt
 
+from .utils import PointType
+
 
 @dataclass
 class Waveform:
@@ -21,8 +23,12 @@ class Waveform:
     def data(self):
         pass
 
-    def to_string(self):
-        pass
+    def to_string(self, point_type=PointType.DECIMAL_INTEGER):
+        if point_type != PointType.DECIMAL_INTEGER:
+            raise NotImplementedError
+
+        voltages_str = [f"{voltage:.2f}" for voltage in self.data["voltages"]]
+        return ",".join(voltages_str)
 
 
 class Pulse(Waveform):
