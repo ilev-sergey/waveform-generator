@@ -25,12 +25,13 @@ class PulseSequence(Waveform):
         self.pulses.append(other)
         return self
 
-    def to_array(self):
-        times, voltages = self.pulses[0].to_array()
+    @property
+    def data(self):
+        times, voltages = self.pulses[0].data.values()
         for pulse in self.pulses[1:]:
-            pulse_times, pulse_voltages = pulse.to_array()
+            pulse_times, pulse_voltages = pulse.data.values()
             pulse_times += times[-1]
             times = np.concatenate([times, pulse_times])
             voltages = np.concatenate([voltages, pulse_voltages])
 
-        return times, voltages
+        return {"times": times, "voltages": voltages}

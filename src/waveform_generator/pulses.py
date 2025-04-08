@@ -3,6 +3,8 @@ from dataclasses import dataclass
 import numpy as np
 from matplotlib import pyplot as plt
 
+from .utils import PointType
+
 
 @dataclass
 class Waveform:
@@ -11,18 +13,22 @@ class Waveform:
     delay: float = 0.0
 
     def plot(self):
-        times, voltages = self.to_array()
+        times, voltages = self.data.values()
         plt.plot(times, voltages)
         plt.title("Waveform Plot")
         plt.xlabel("Time, s")
         plt.ylabel("Voltage, V")
         plt.show()
 
-    def to_array(self):
+    def data(self):
         pass
 
-    def to_string(self):
-        pass
+    def to_string(self, point_type=PointType.DECIMAL_INTEGER):
+        if point_type != PointType.DECIMAL_INTEGER:
+            raise NotImplementedError
+
+        voltages_str = [f"{voltage:.2f}" for voltage in self.data["voltages"]]
+        return ",".join(voltages_str)
 
 
 class Pulse(Waveform):
@@ -37,8 +43,10 @@ class Pulse(Waveform):
 
 
 class RectangularPulse(Pulse):
-    def to_array(self):
-        sample_rate = 1000  # points/s
+    @property
+    def data(self):
+        steps_per_min_time = 10
+        sample_rate = steps_per_min_time * int(1 / self.duration)  # points/s
 
         total_time = self.delay + self.duration
 
@@ -56,7 +64,7 @@ class RectangularPulse(Pulse):
 
         voltage_array[pulse_start_idx : pulse_end_idx + 1] = self.dc_bias + self.amplitude
 
-        return (time_array, voltage_array)
+        return {"times": time_array, "voltages": voltage_array}
 
 
 class TrapezoidalPulse(Pulse):
@@ -65,8 +73,12 @@ class TrapezoidalPulse(Pulse):
         self.rise_time = rise_time
         self.fall_time = fall_time
 
-    def to_array(self):
-        sample_rate = 1000  # points/s
+    @property
+    def data(self):
+        time_values = [t for t in [self.delay, self.rise_time, self.duration, self.fall_time] if t != 0]
+        min_time = min(time_values)
+        steps_per_min_time = 10
+        sample_rate = steps_per_min_time * int(1 / min_time)  # points/s
 
         total_time = self.delay + self.rise_time + self.duration + self.fall_time
 
@@ -95,4 +107,4 @@ class TrapezoidalPulse(Pulse):
             pulse_end_fall_idx - pulse_start_fall_idx + 1,
         )
 
-        return (time_array, voltage_array)
+        return {"times": time_array, "voltages": voltage_array}
