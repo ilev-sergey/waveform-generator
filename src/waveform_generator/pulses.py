@@ -38,7 +38,8 @@ class Pulse(Waveform):
 
 class RectangularPulse(Pulse):
     def to_array(self):
-        sample_rate = 1000  # points/s
+        steps_per_min_time = 10
+        sample_rate = steps_per_min_time * int(1 / self.duration)  # points/s
 
         total_time = self.delay + self.duration
 
@@ -66,7 +67,10 @@ class TrapezoidalPulse(Pulse):
         self.fall_time = fall_time
 
     def to_array(self):
-        sample_rate = 1000  # points/s
+        time_values = [t for t in [self.delay, self.rise_time, self.duration, self.fall_time] if t != 0]
+        min_time = min(time_values)
+        steps_per_min_time = 10
+        sample_rate = steps_per_min_time * int(1 / min_time)  # points/s
 
         total_time = self.delay + self.rise_time + self.duration + self.fall_time
 
