@@ -12,6 +12,10 @@ class Waveform:
     duration: float
     delay: float = 0.0
 
+    @property
+    def total_duration(self):
+        return self.delay + self.duration
+
     def plot(self):
         times, voltages = self.data.values()
         plt.plot(times, voltages)
@@ -68,31 +72,35 @@ class RectangularPulse(Pulse):
 
 
 class TrapezoidalPulse(Pulse):
-    def __init__(self, amplitude, duration, delay=0.0, dc_bias=0, rise_time=0.0, fall_time=0.0):
-        super().__init__(amplitude, duration, delay, dc_bias)
+    def __init__(self, amplitude, pulse_width, delay=0.0, dc_bias=0, rise_time=0.0, fall_time=0.0):
+        super().__init__(
+            amplitude=amplitude,
+            duration=rise_time + pulse_width + fall_time,
+            delay=delay,
+            dc_bias=dc_bias,
+        )
+        self.pulse_width = pulse_width
         self.rise_time = rise_time
         self.fall_time = fall_time
 
     @property
     def data(self):
-        time_values = [t for t in [self.delay, self.rise_time, self.duration, self.fall_time] if t != 0]
+        time_values = [t for t in [self.delay, self.rise_time, self.pulse_width, self.fall_time] if t != 0]
         min_time = min(time_values)
         steps_per_min_time = 10
         sample_rate = steps_per_min_time * int(1 / min_time)  # points/s
 
-        total_time = self.delay + self.rise_time + self.duration + self.fall_time
-
         # Create time array
-        num_points = int(total_time * sample_rate) + 1
-        time_array = np.linspace(0, total_time, num_points)
+        num_points = int(self.total_duration * sample_rate) + 1
+        time_array = np.linspace(0, self.total_duration, num_points)
 
         # Initialize voltage array with DC bias
         voltage_array = np.ones_like(time_array) * self.dc_bias
 
         pulse_start_rise_idx = int(self.delay * sample_rate)
         pulse_end_rise_idx = int((self.delay + self.rise_time) * sample_rate)
-        pulse_start_fall_idx = int((self.delay + self.rise_time + self.duration) * sample_rate)
-        pulse_end_fall_idx = int((self.delay + self.rise_time + self.duration + self.fall_time) * sample_rate)
+        pulse_start_fall_idx = int((self.delay + self.rise_time + self.pulse_width) * sample_rate)
+        pulse_end_fall_idx = int((self.delay + self.rise_time + self.pulse_width + self.fall_time) * sample_rate)
         pulse_end_fall_idx = min(pulse_end_fall_idx, len(voltage_array) - 1)
 
         voltage_array[pulse_start_rise_idx : pulse_end_rise_idx + 1] = np.linspace(

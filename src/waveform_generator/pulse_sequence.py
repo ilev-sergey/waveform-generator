@@ -18,7 +18,7 @@ class PulseSequence(Waveform):
         super().__init__(
             max_voltage=max_voltage,
             delay=pulses[0].delay,
-            duration=sum([pulse.duration for pulse in pulses]),
+            duration=sum([pulse.delay + pulse.duration for pulse in pulses]) - pulses[0].delay,
         )
 
     def __iadd__(self, other):
