@@ -52,18 +52,16 @@ class RectangularPulse(Pulse):
         steps_per_min_time = 10
         sample_rate = steps_per_min_time * int(1 / self.duration)  # points/s
 
-        total_time = self.delay + self.duration
-
         # Create time array
-        num_points = int(total_time * sample_rate) + 1
-        time_array = np.linspace(0, total_time, num_points)
+        num_points = int(self.total_duration * sample_rate) + 1
+        time_array = np.linspace(0, self.total_duration, num_points)
 
         # Initialize voltage array with DC bias
         voltage_array = np.ones_like(time_array) * self.dc_bias
 
         # Set pulse region (delay to delay+duration) to DC bias + amplitude
         pulse_start_idx = int(self.delay * sample_rate)
-        pulse_end_idx = int((self.delay + self.duration) * sample_rate)
+        pulse_end_idx = int(self.total_duration * sample_rate)
         pulse_end_idx = min(pulse_end_idx, len(voltage_array) - 1)
 
         voltage_array[pulse_start_idx : pulse_end_idx + 1] = self.dc_bias + self.amplitude
