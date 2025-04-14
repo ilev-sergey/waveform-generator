@@ -34,6 +34,14 @@ class Waveform:
         voltages_str = [f"{voltage:.2f}" for voltage in self.data["voltages"]]
         return ",".join(voltages_str)
 
+    @property
+    def voltages(self):
+        return self.data["voltages"]
+
+    @property
+    def times(self):
+        return self.data["times"]
+
 
 class Pulse(Waveform):
     def _calculate_max_voltage(self):
