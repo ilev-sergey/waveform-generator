@@ -22,7 +22,7 @@ class Waveform:
         plt.title("Waveform Plot")
         plt.xlabel("Time, s")
         plt.ylabel("Voltage, V")
-        plt.show()
+        plt.ticklabel_format(style="sci", axis="x", scilimits=(0, 0))
 
     def data(self):
         pass
