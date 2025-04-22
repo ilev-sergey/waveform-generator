@@ -1,9 +1,18 @@
+from dataclasses import dataclass, field
+
 import numpy as np
 
 from waveform_generator.waveform import Waveform
 
 
+@dataclass
 class Pulse(Waveform):
+    amplitude: float
+    dc_bias: float = field(default=0.0, kw_only=True)
+
+    def __post_init__(self):
+        super().__init__(duration=self.duration, delay=self.delay)
+
     def __init__(self, amplitude, duration, delay=0.0, dc_bias=0):
         self.amplitude = amplitude
         self.dc_bias = dc_bias
@@ -33,17 +42,16 @@ class RectangularPulse(Pulse):
         return {"times": time_array, "voltages": voltage_array}
 
 
+@dataclass
 class TrapezoidalPulse(Pulse):
-    def __init__(self, amplitude, pulse_width, delay=0.0, dc_bias=0, rise_time=0.0, fall_time=0.0):
-        super().__init__(
-            amplitude=amplitude,
-            duration=rise_time + pulse_width + fall_time,
-            delay=delay,
-            dc_bias=dc_bias,
-        )
-        self.pulse_width = pulse_width
-        self.rise_time = rise_time
-        self.fall_time = fall_time
+    pulse_width: float
+    rise_time: float = 0.0
+    fall_time: float = 0.0
+    duration: float = field(init=False)
+
+    def __post_init__(self):
+        self.duration = self.rise_time + self.pulse_width + self.fall_time
+        super().__post_init__()
 
     @property
     def data(self):
