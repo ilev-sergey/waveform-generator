@@ -1,6 +1,6 @@
 import pytest
 
-from waveform_generator import Pulse
+from waveform_generator import TrapezoidalPulse
 
 
 @pytest.mark.parametrize(
@@ -15,5 +15,5 @@ from waveform_generator import Pulse
     ],
 )
 def test_max_voltage(amplitude, dc_bias, expected_max):
-    pulse = Pulse(amplitude=amplitude, duration=1.0, dc_bias=dc_bias)
+    pulse = TrapezoidalPulse(amplitude=amplitude, dc_bias=dc_bias, pulse_width=1, rise_time=0.1, fall_time=0.1)
     assert pulse.max_voltage == expected_max

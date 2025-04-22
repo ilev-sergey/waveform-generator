@@ -26,7 +26,7 @@ class Waveform:
 
     @property
     def max_voltage(self):
-        return self.voltages.max()
+        return np.max(np.abs(self.voltages))
 
     def plot(self):
         times, voltages = self.data.values()
