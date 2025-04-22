@@ -1,6 +1,6 @@
 import numpy as np
 
-from .pulses import Waveform
+from waveform_generator.waveform import Waveform
 
 
 class PulseSequence(Waveform):
