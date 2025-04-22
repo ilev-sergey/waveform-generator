@@ -4,14 +4,10 @@ from waveform_generator.waveform import Waveform
 
 
 class Pulse(Waveform):
-    def _calculate_max_voltage(self):
-        return max(abs(self.dc_bias + self.amplitude), abs(self.dc_bias))
-
     def __init__(self, amplitude, duration, delay=0.0, dc_bias=0):
         self.amplitude = amplitude
         self.dc_bias = dc_bias
-        max_voltage = self._calculate_max_voltage()
-        super().__init__(max_voltage=max_voltage, duration=duration, delay=delay)
+        super().__init__(duration=duration, delay=delay)
 
 
 class RectangularPulse(Pulse):

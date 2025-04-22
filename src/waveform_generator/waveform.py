@@ -8,13 +8,16 @@ from waveform_generator.utils import PointType
 
 @dataclass
 class Waveform:
-    max_voltage: float
     duration: float
     delay: float = 0.0
 
     @property
     def total_duration(self):
         return self.delay + self.duration
+
+    @property
+    def max_voltage(self):
+        return self.voltages.max()
 
     def plot(self):
         times, voltages = self.data.values()
