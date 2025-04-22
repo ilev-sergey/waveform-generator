@@ -13,10 +13,8 @@ class Pulse(Waveform):
     def __post_init__(self):
         super().__init__(duration=self.duration, delay=self.delay)
 
-    def __init__(self, amplitude, duration, delay=0.0, dc_bias=0):
-        self.amplitude = amplitude
-        self.dc_bias = dc_bias
-        super().__init__(duration=duration, delay=delay)
+    def _voltage_fields(self):
+        return super()._voltage_fields() + ["amplitude", "dc_bias"]
 
 
 class RectangularPulse(Pulse):

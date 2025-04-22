@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -10,6 +10,15 @@ from waveform_generator.utils import PointType
 class Waveform:
     duration: float
     delay: float = field(default=0.0, kw_only=True)
+
+    def __neg__(self):
+        kwargs = {f.name: getattr(self, f.name) for f in fields(self) if f.init}
+        for name in self._voltage_fields():
+            kwargs[name] = -kwargs[name]
+        return self.__class__(**kwargs)
+
+    def _voltage_fields(self):
+        return []
 
     @property
     def total_duration(self):

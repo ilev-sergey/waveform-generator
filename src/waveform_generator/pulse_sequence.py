@@ -19,6 +19,14 @@ class PulseSequence(Waveform):
         self.pulses.append(other)
         return self
 
+    def __neg__(self):
+        return self.__class__(
+            pulses=[-pulse for pulse in self.pulses],
+            dc_bias=-self.dc_bias,
+            cycles=self.cycles,
+            sample_rate=self.sample_rate,
+        )
+
     @property
     def data(self):
         times, voltages = self.pulses[0].data.values()

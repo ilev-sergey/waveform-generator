@@ -21,6 +21,14 @@ class StaircaseSweep(Waveform):
         self.steps = int((self.end_voltage - self.start_voltage) / self.voltage_step)
         self.duration = (self.steps - 1) * (self.time_step + self.edge_time)
 
+    def _voltage_fields(self):
+        return super()._voltage_fields() + [
+            "start_voltage",
+            "end_voltage",
+            "voltage_step",
+            "dc_bias",
+        ]
+
     @property
     def data(self):
         times = []
