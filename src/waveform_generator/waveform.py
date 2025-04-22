@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -9,7 +9,7 @@ from waveform_generator.utils import PointType
 @dataclass
 class Waveform:
     duration: float
-    delay: float = 0.0
+    delay: float = field(default=0.0, kw_only=True)
 
     @property
     def total_duration(self):
