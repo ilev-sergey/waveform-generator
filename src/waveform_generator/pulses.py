@@ -8,6 +8,7 @@ from waveform_generator.waveform import Waveform
 @dataclass
 class Pulse(Waveform):
     amplitude: float
+    duration: float
     dc_bias: float = field(default=0.0, kw_only=True)
 
     def __post_init__(self):
