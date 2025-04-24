@@ -28,9 +28,11 @@ class Waveform:
     def max_voltage(self):
         return np.max(np.abs(self.voltages))
 
-    def plot(self):
+    def plot(self, trigger=False):
         times, voltages = self.data.values()
         plt.plot(times, voltages)
+        if trigger:
+            plt.step(times, self.trigger, label="Trigger", linestyle="--")
         plt.title("Waveform Plot")
         plt.xlabel("Time, s")
         plt.ylabel("Voltage, V")
@@ -60,3 +62,15 @@ class Waveform:
     @property
     def times(self):
         return self.data["times"]
+
+    @property
+    def trigger(self, amplitude=1.0):
+        trigger = np.zeros_like(self.voltages)
+
+        slope = np.gradient(self.voltages, self.times)
+        flat_threshold = 1e-5
+        is_flat = np.abs(slope) < flat_threshold
+
+        trigger[1:] = is_flat[1:] & ~is_flat[:-1]
+
+        return trigger * amplitude
