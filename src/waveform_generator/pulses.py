@@ -22,8 +22,7 @@ class RectangularPulse(Pulse):
     @property
     def data(self):
         steps_per_min_time = 10
-        sample_rate = steps_per_min_time * int(1 / self.duration)  # points/s
-
+        sample_rate = steps_per_min_time * (1 if self.duration >= 1 else int(1 / self.duration))
         # Create time array
         num_points = int(self.total_duration * sample_rate) + 1
         time_array = np.linspace(0, self.total_duration, num_points)
