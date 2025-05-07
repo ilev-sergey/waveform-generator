@@ -8,18 +8,47 @@ from waveform_generator.waveform import Waveform
 @dataclass
 class StaircaseSweep(Waveform):
     end_voltage: float
-    voltage_step: float
+    voltage_step: float = None
     time_step: float
     edge_time: float = 0.0
     dc_bias: float = 0.0
     start_voltage: float = 0.0
+    steps: int = None
 
-    steps: int = field(init=False)
     duration: float = field(init=False)
 
     def __post_init__(self):
-        self.steps = int((self.end_voltage - self.start_voltage) / self.voltage_step)
+        self._validate_steps()
+
+        if self.voltage_step is None:
+            self.voltage_step = self._calculate_voltage_step_from_steps()
+
+        elif self.steps is None:
+            steps_calculated = (self.end_voltage - self.start_voltage) / self.voltage_step
+            if not np.isclose(steps_calculated, round(steps_calculated), rtol=1e-3):
+                raise ValueError(
+                    f"The difference between end_voltage and start_voltage ({self.end_voltage - self.start_voltage}) "
+                    f"is not divisible by voltage_step ({self.voltage_step}). This is not supported as it can lead to unexpected waveform. "
+                    f"Consider using steps instead."
+                )
+            self.steps = int((self.end_voltage - self.start_voltage) / self.voltage_step)
+
         self.duration = (self.steps - 1) * (self.time_step + self.edge_time)
+
+    def _validate_steps(self):
+        if self.voltage_step is None and self.steps is None:
+            raise ValueError("One of 'voltage_step' or 'steps' must be provided")
+
+        if self.voltage_step is not None and self.steps is not None:
+            calculated_step = self._calculate_voltage_step_from_steps()
+            if not np.isclose(abs(self.voltage_step), abs(calculated_step), rtol=1e-3):
+                raise ValueError(
+                    f"Both 'voltage_step' and 'steps' are provided, but they are inconsistent, use only one of them.\n"
+                    f"Calculated voltage step: {calculated_step:.3f}, provided voltage step: {self.voltage_step}"
+                )
+
+    def _calculate_voltage_step_from_steps(self):
+        return (self.end_voltage - self.start_voltage) / (self.steps)
 
     def _voltage_fields(self):
         return super()._voltage_fields() + [
