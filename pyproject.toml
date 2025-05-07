@@ -35,3 +35,8 @@ source = [
     # blank line to avoid reordering 
     "*/site-packages",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "src",
+]
