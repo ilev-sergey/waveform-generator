@@ -15,11 +15,9 @@ tests = [
     "pytest-cov>=5.0.0",
     "pytest>=8.3.5",
 ]
-
-[dependency-groups]
 dev = [
-    "coverage>=7.6.1",
     "ipykernel>=6.29.5",
+    "nox>=2025.5.1",
 ]
 
 [tool.ruff]
