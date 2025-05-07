@@ -1,0 +1,36 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  generate-build-jobs:
+    runs-on: ubuntu-latest
+    outputs:
+      session: ${{ steps.set-matrix.outputs.session }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: wntrblm/nox@main
+      - id: set-matrix
+        shell: bash
+        run: echo session=$(nox -s build --json -l | jq -c '[.[].session]') | tee --append $GITHUB_OUTPUT
+  build:
+    name: ${{ matrix.session }}
+    needs: [generate-build-jobs]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        session: ${{ fromJson(needs.generate-build-jobs.outputs.session) }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Extract Python version from session name
+        id: extract
+        run: |
+          version=$(echo "${{ matrix.session }}" | grep -oE '[0-9]+\.[0-9]+')
+          echo "python_version=$version" >> $GITHUB_OUTPUT
+
+      - uses: wntrblm/nox@main
+        with:
+          python-versions: "${{ steps.extract.outputs.python_version }}"
+      - run: nox -s "${{ matrix.session }}"
