@@ -1,7 +1,7 @@
 [project]
 name = "waveform-generator"
 version = "0.1.0"
-description = "Add your description here"
+description = "Library for generating customizable waveforms and pulse sequences for signal processing applications"
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
