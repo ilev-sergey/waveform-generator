@@ -62,4 +62,4 @@ class StaircaseSweep(Waveform):
             t += self.time_step
             current_voltage = next_voltage
 
-        return {"times": np.array(times), "voltages": np.array(voltages)}
+        return {"times": np.array(times), "voltages": np.array(voltages) + self.dc_bias}
