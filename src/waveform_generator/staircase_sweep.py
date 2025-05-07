@@ -8,12 +8,12 @@ from waveform_generator.waveform import Waveform
 @dataclass
 class StaircaseSweep(Waveform):
     end_voltage: float
-    voltage_step: float = None
     time_step: float
-    edge_time: float = 0.0
-    dc_bias: float = 0.0
-    start_voltage: float = 0.0
     steps: int = None
+    start_voltage: float = 0.0
+    edge_time: float = 0.0
+    voltage_step: float = None
+    dc_bias: float = 0.0
 
     duration: float = field(init=False)
 
