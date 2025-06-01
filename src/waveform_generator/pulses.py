@@ -87,11 +87,17 @@ class TrapezoidalPulse(Pulse):
 
     def to_vectors(self):
         """Return the trapezoidal pulse as a list of vectors."""
-        vectors = [
-            [self.rise_time, self.dc_bias + self.amplitude],
-            [self.pulse_width, self.dc_bias + self.amplitude],
-            [self.fall_time, self.dc_bias],
+        times = [
+            self.rise_time,
+            self.pulse_width,
+            self.fall_time,
         ]
-        if self.delay:
-            vectors = [[self.delay, self.dc_bias]] + vectors
-        return vectors
+        voltages = [
+            self.dc_bias + self.amplitude,
+            self.dc_bias + self.amplitude,
+            self.dc_bias,
+        ]
+        if self.delay > 0:
+            times = [self.delay] + times
+            voltages = [self.dc_bias] + voltages
+        return times, voltages

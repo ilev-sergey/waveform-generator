@@ -28,7 +28,13 @@ class PulseSequence(Waveform):
         )
 
     def to_vectors(self):
-        return np.concatenate([pulse.to_vectors() for pulse in self.pulses])
+        times = []
+        voltages = []
+        for pulse in self.pulses:
+            pulse_times, pulse_voltages = pulse.to_vectors()
+            times.extend(pulse_times)
+            voltages.extend(pulse_voltages)
+        return times, voltages
 
     @property
     def data(self):
