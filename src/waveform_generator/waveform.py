@@ -55,6 +55,9 @@ class Waveform:
 
         raise NotImplementedError
 
+    def to_vectors(self):
+        raise NotImplementedError(f"to_vectors method is not implemented for {self.__class__.__name__}")
+
     @property
     def voltages(self):
         return self.data["voltages"]

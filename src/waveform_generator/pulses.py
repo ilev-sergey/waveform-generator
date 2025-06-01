@@ -84,3 +84,12 @@ class TrapezoidalPulse(Pulse):
         )
 
         return {"times": time_array, "voltages": voltage_array}
+
+    def to_vectors(self):
+        """Return the trapezoidal pulse as a list of vectors."""
+        return [
+            [self.delay, self.dc_bias],
+            [self.rise_time, self.dc_bias + self.amplitude],
+            [self.pulse_width, self.dc_bias + self.amplitude],
+            [self.fall_time, self.dc_bias],
+        ]

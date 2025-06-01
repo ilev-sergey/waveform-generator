@@ -27,6 +27,9 @@ class PulseSequence(Waveform):
             sample_rate=self.sample_rate,
         )
 
+    def to_vectors(self):
+        return np.concatenate([pulse.to_vectors() for pulse in self.pulses])
+
     @property
     def data(self):
         times, voltages = self.pulses[0].data.values()
