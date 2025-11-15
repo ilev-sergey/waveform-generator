@@ -46,6 +46,7 @@ class TrapezoidalPulse(Pulse):
     rise_time: float = 0.0
     fall_time: float = 0.0
     duration: float = field(init=False)
+    steps_per_min_time: int = 10
 
     def __post_init__(self):
         self.duration = self.rise_time + self.pulse_width + self.fall_time
@@ -55,8 +56,7 @@ class TrapezoidalPulse(Pulse):
     def data(self):
         time_values = [t for t in [self.delay, self.rise_time, self.pulse_width, self.fall_time] if t != 0]
         min_time = min(time_values)
-        steps_per_min_time = 10
-        sample_rate = steps_per_min_time * int(1 / min_time)  # points/s
+        sample_rate = self.steps_per_min_time * 1 / min_time  # points/s
 
         # Create time array
         num_points = int(self.total_duration * sample_rate) + 1
