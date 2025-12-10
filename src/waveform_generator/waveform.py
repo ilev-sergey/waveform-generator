@@ -28,15 +28,17 @@ class Waveform:
     def max_voltage(self):
         return np.max(np.abs(self.voltages))
 
-    def plot(self, trigger=False):
+    def plot(self, trigger=False, ax=None):
+        if ax is None:
+            ax = plt.gca()
         times, voltages = self.data.values()
-        plt.plot(times, voltages)
+        ax.plot(times, voltages)
         if trigger:
-            plt.step(times, self.trigger, label="Trigger", linestyle="--")
-        plt.title("Waveform Plot")
-        plt.xlabel("Time, s")
-        plt.ylabel("Voltage, V")
-        plt.ticklabel_format(style="sci", axis="x", scilimits=(0, 0))
+            ax.step(times, self.trigger, label="Trigger", linestyle="--")
+        ax.set_title("Waveform Plot")
+        ax.set_xlabel("Time, s")
+        ax.set_ylabel("Voltage, V")
+        ax.ticklabel_format(style="sci", axis="x", scilimits=(0, 0))
 
     def data(self):
         pass
