@@ -17,6 +17,15 @@ class Waveform:
             kwargs[name] = -kwargs[name]
         return self.__class__(**kwargs)
 
+    def __mul__(self, other):
+        kwargs = {f.name: getattr(self, f.name) for f in fields(self) if f.init}
+        for name in self._voltage_fields():
+            kwargs[name] = kwargs[name] * other
+        return self.__class__(**kwargs)
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
     def _voltage_fields(self):
         return []
 
