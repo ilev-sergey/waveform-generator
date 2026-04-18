@@ -1,6 +1,8 @@
 [project]
 name = "waveform-generator"
-version = "0.1.0"
+dynamic = [
+    "version",
+]
 description = "Library for generating customizable waveforms and pulse sequences for signal processing applications"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -8,6 +10,16 @@ dependencies = [
     "matplotlib",
     "numpy",
 ]
+
+[build-system]
+requires = [
+    "setuptools>=61.0",
+    "setuptools-scm",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "src/waveform_generator/_version.py"
 
 [project.optional-dependencies]
 tests = [
