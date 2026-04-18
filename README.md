@@ -2,7 +2,7 @@
 
 A Python library for generating customizable waveforms and pulse sequences for signal processing applications.
 
-[![Python Versions](https://img.shields.io/badge/python-3.8%20|%203.9%20|%203.10%20|%203.11%20|%203.12%20|%203.13-blue)](https://www.python.org/)
+[![Python Versions](https://img.shields.io/badge/python-3.10%20|%203.11%20|%203.12%20|%203.13%20|%203.14-blue)](https://www.python.org/)
 [![build](https://github.com/ilev-sergey/waveform-generator/actions/workflows/build.yml/badge.svg)](https://github.com/ilev-sergey/waveform-generator/actions/workflows/build.yml)
 [![tests](https://github.com/ilev-sergey/waveform-generator/actions/workflows/tests.yml/badge.svg)](https://github.com/ilev-sergey/waveform-generator/actions/workflows/tests.yml)
 
